@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\MassDelete">
+        <plugin name="sr_trashcan_product_mass_delete" type="SR\Trashcan\Plugin\Catalog\Controller\Adminhtml\Product\MassDelete" />
+    </type>
+    <type name="Magento\Catalog\Ui\DataProvider\Product\ProductDataProvider">
+        <plugin name="sr_trashcan_product_mass_delete" type="SR\Trashcan\Plugin\Catalog\Ui\DataProvider\Product\ProductDataProvider" />
+    </type>
+</config>

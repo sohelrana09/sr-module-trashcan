@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="SR_Trashcan::st_trashcan" title="Trashcan" module="SR_Trashcan" sortOrder="45" parent="Magento_Catalog::catalog" resource="SR_Trashcan::trashcan"/>
+        <add id="SR_Trashcan::trashcan" title="Trashcan" module="SR_Trashcan" sortOrder="300" parent="SR_Trashcan::st_trashcan" action="trashcan/trashcan" resource="SR_Trashcan::trashcan"/>
+    </menu>
+</config>
