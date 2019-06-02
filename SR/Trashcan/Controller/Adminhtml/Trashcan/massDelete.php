@@ -6,6 +6,7 @@ use Magento\Catalog\Controller\Adminhtml\Product\Builder;
 use Magento\Backend\App\Action\Context;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 
 class massDelete extends \Magento\Catalog\Controller\Adminhtml\Product
 {
@@ -22,19 +23,29 @@ class massDelete extends \Magento\Catalog\Controller\Adminhtml\Product
     protected $collectionFactory;
 
     /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
+
+    /**
+     * massDelete constructor.
+     *
      * @param Context $context
      * @param Builder $productBuilder
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
+     * @param ProductRepositoryInterface $productRepository
      */
     public function __construct(
         Context $context,
         Builder $productBuilder,
         Filter $filter,
-        CollectionFactory $collectionFactory
+        CollectionFactory $collectionFactory,
+        ProductRepositoryInterface $productRepository
     ) {
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
+        $this->productRepository = $productRepository;
         parent::__construct($context, $productBuilder);
     }
 
@@ -45,11 +56,12 @@ class massDelete extends \Magento\Catalog\Controller\Adminhtml\Product
     {
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         $productDeleted = 0;
+        /** @var \Magento\Catalog\Model\Product $product */
         foreach ($collection->getItems() as $product) {
-            $product->delete();
+            $this->productRepository->delete($product);
             $productDeleted++;
         }
-        $this->messageManager->addSuccess(
+        $this->messageManager->addSuccessMessage(
             __('A total of %1 record(s) have been deleted.', $productDeleted)
         );
 

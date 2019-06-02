@@ -2,9 +2,10 @@
 namespace SR\Trashcan\Plugin\Catalog\Controller\Adminhtml\Product;
 
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Catalog\Controller\Adminhtml\Product\Builder;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Message\ManagerInterface;
 
 class MassDelete
 {
@@ -21,30 +22,41 @@ class MassDelete
     protected $collectionFactory;
 
     /**
-     * @var \Magento\Framework\Controller\ResultFactory
+     * @var ResultFactory
      */
     protected $resultFactory;
 
     /**
-     * @var \Magento\Framework\Message\ManagerInterface
+     * @var ManagerInterface
      */
     protected $messageManager;
 
     /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
+
+    /**
+     * MassDelete constructor.
+     *
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param ResultFactory $resultFactory
+     * @param ManagerInterface $messageManager
+     * @param ProductRepositoryInterface $productRepository
      */
     public function __construct(
         Filter $filter,
         CollectionFactory $collectionFactory,
         ResultFactory $resultFactory,
-        \Magento\Framework\Message\ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        ProductRepositoryInterface $productRepository
     ) {
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->messageManager = $messageManager;
         $this->resultFactory = $resultFactory;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -57,11 +69,14 @@ class MassDelete
     {
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         $productDeleted = 0;
+        /** @var \Magento\Catalog\Model\Product $product */
         foreach ($collection->getItems() as $product) {
-            $product->setStatus(3)->save();
+            $product->setStatus(3);
+            $this->productRepository->save($product);
             $productDeleted++;
         }
-        $this->messageManager->addSuccess(
+
+        $this->messageManager->addSuccessMessage(
             __('A total of %1 record(s) have been deleted.', $productDeleted)
         );
 
