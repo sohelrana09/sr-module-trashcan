@@ -11,6 +11,13 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 class massDelete extends \Magento\Catalog\Controller\Adminhtml\Product
 {
     /**
+     * Authorization level of a basic admin session
+     *
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = 'SR_Trashcan::trashcan';
+
+    /**
      * Massactions filter
      *
      * @var Filter
